@@ -86,13 +86,22 @@ gallery.innerHTML = images
 gallery.addEventListener('click', onGalleryClick);
 
 function onGalleryClick(event) {
-  const link = event.target.closest('.gallery-link');
-
-  if (!link || !gallery.contains(link)) return;
-
   event.preventDefault();
 
-  const image = link.querySelector('.gallery-image');
+  const image = event.target;
+
+  if (
+    !(image instanceof HTMLImageElement) ||
+    !image.classList.contains('gallery-image') ||
+    !gallery.contains(image) ||
+    !image.dataset.source
+  ) {
+    return;
+  }
+
+  const link = image.closest('.gallery-link');
+
+  if (!link) return;
   const instance = basicLightbox.create(
     `<img src="${image.dataset.source}" alt="${image.alt}" />`,
     {
